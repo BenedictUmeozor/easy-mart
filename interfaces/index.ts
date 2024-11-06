@@ -56,3 +56,11 @@ export interface ProductResponse {
   skip: number;
   limit: number;
 }
+
+export interface BreadCrumbLink {
+  id: number;
+  name: string;
+  href: string;
+  isPage: boolean;
+  isClickable?: boolean;
+}

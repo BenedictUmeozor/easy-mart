@@ -15,6 +15,10 @@ type FormSchema = z.infer<typeof loginSchema>;
 const LoginForm = () => {
   const form = useForm<FormSchema>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   const onSubmit = (values: FormSchema) => {

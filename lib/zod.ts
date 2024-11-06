@@ -31,3 +31,13 @@ export const loginSchema = z.object({
     .email({ message: 'Invalid email' }),
   password: z.string().min(1, { message: 'Password is required' }),
 });
+
+export const contactSchema = z.object({
+  name: z.string().min(1, { message: 'This field is required' }),
+  email: z
+    .string()
+    .min(1, { message: 'This field is required' })
+    .email({ message: 'Invalid email' }),
+  phone: z.string().min(1, { message: 'This field is required' }),
+  message: z.string().min(1, { message: 'This field is required' }),
+});
