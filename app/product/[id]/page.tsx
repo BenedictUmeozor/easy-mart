@@ -1,6 +1,7 @@
 import Container from '@/components/layout/container';
 import Images from '@/components/product/images';
 import ProductInfo from '@/components/product/product-info';
+import RelatedProducts from '@/components/product/related-products';
 import BreadCrumbComponent from '@/components/shared/breadcrumb-component';
 import type { BreadCrumbLink } from '@/interfaces';
 import { fetchProduct } from '@/server/queries';
@@ -42,6 +43,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <Images images={product.images.slice(0, 3)} />
         <ProductInfo product={product} />
       </Container>
+      <RelatedProducts category={product.category} productId={product.id} />
     </main>
   );
 }
