@@ -20,7 +20,12 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${lato.className} antialiased`}>
-        <NextTopLoader showSpinner={false} height={2} color='#DB4444' />
+        <NextTopLoader
+          showSpinner={false}
+          height={3}
+          color='#DB4444'
+          shadow='0'
+        />
         <Header />
         {children}
         <Footer />

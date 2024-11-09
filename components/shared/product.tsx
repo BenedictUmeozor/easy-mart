@@ -4,8 +4,11 @@ import type { AppProduct } from '@/interfaces';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Rating } from '@mui/material';
+import useIsMounted from '@/hooks/mounted';
 
 const Product = ({ product }: { product: AppProduct }) => {
+  const isMounted = useIsMounted();
+
   return (
     <div className='space-y-2'>
       <Link
@@ -39,7 +42,7 @@ const Product = ({ product }: { product: AppProduct }) => {
             )}
           </span>
         </div>
-        <Rating value={product.rating} readOnly />
+        {isMounted && <Rating value={product.rating} readOnly />}
       </div>
     </div>
   );

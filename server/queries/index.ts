@@ -1,6 +1,6 @@
 'use server';
 
-import type { AppCategory, ProductResponse } from '@/interfaces';
+import type { AppCategory, ProductResponse, SingleProduct } from '@/interfaces';
 
 export const fetchCategories = async (): Promise<AppCategory[]> => {
   const res = await fetch('https://dummyjson.com/products/categories', {
@@ -36,5 +36,12 @@ export const fetchCaregoryProducts = async (
       next: { revalidate: 6 * 3600 },
     }
   );
+  return res.json();
+};
+
+export const fetchProduct = async (id: string): Promise<SingleProduct> => {
+  const res = await fetch(`https://dummyjson.com/products/${id}`, {
+    next: { revalidate: 6 * 3600 },
+  });
   return res.json();
 };
