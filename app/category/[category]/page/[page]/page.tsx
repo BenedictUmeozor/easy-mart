@@ -22,6 +22,7 @@ export default async function Page({
       name: 'Category',
       href: '/category',
       isPage: false,
+      isClickable: false,
     },
     {
       id: 3,
