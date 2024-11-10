@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { contactSchema } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -45,7 +46,14 @@ const ContactForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl className='w-full'>
-                  <Input type='text' placeholder='Your Name' {...field} />
+                  <Input
+                    className={cn(
+                      'border-[#f5f5f5] bg-[#f5f5f5] ring-offset-[#f5f5f5]'
+                    )}
+                    type='text'
+                    placeholder='Your Name'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -57,7 +65,14 @@ const ContactForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl className='w-full'>
-                  <Input type='email' placeholder='Your Email' {...field} />
+                  <Input
+                    className={cn(
+                      'border-[#f5f5f5] bg-[#f5f5f5] ring-offset-[#f5f5f5]'
+                    )}
+                    type='email'
+                    placeholder='Your Email'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -70,6 +85,9 @@ const ContactForm = () => {
               <FormItem>
                 <FormControl className='w-full'>
                   <Input
+                    className={cn(
+                      'border-[#f5f5f5] bg-[#f5f5f5] ring-offset-[#f5f5f5]'
+                    )}
                     type='tel'
                     placeholder='Your Phone Number'
                     {...field}
@@ -88,9 +106,11 @@ const ContactForm = () => {
               <FormControl className='w-full'>
                 <Textarea
                   {...field}
+                  className={cn(
+                    'resize-none border-[#f5f5f5] bg-[#f5f5f5] ring-offset-[#f5f5f5]'
+                  )}
                   placeholder='Your Message'
                   rows={8}
-                  className='resize-none'
                 />
               </FormControl>
               <FormMessage />
