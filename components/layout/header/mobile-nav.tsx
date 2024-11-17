@@ -1,15 +1,18 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { NAVLINKS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MenuIcon, X } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, useState } from 'react';
 
 const MobileNav = () => {
   const [open, setOpen] = useState(false);
+  const { status } = useSession();
 
   const pathname = usePathname();
 
@@ -43,6 +46,19 @@ const MobileNav = () => {
                   </Link>
                 </li>
               ))}
+              {status === 'authenticated' && (
+                <li>
+                  <Button
+                    variant='ghost'
+                    className={cn(
+                      'flex w-full items-center justify-start text-base hover:text-primary'
+                    )}
+                    onClick={() => signOut()}
+                  >
+                    Logout
+                  </Button>
+                </li>
+              )}
             </ul>
           </motion.nav>
         )}

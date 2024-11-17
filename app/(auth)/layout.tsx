@@ -1,9 +1,23 @@
 import Container from '@/components/layout/container';
+import { getSession } from '@/lib/auth';
 import { PreloadAuthResources } from '@/lib/preload-resources';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
 import { type ReactNode } from 'react';
 
-export default function AuthLayout({ children }: { children: ReactNode }) {
+export default async function AuthLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const session = await getSession();
+
+  console.log('auth_session', session);
+
+  if (session) {
+    redirect('/account');
+  }
+
   return (
     <main className='py-8 lg:py-12'>
       <PreloadAuthResources />

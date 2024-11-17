@@ -17,8 +17,4 @@ export const NAVLINKS: AppLink[] = [
     name: 'Shop',
     href: '/shop',
   },
-  {
-    name: 'Sign Up',
-    href: '/signup',
-  },
 ];

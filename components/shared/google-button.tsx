@@ -4,14 +4,30 @@ import google from '@/assets/google.svg';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { getProviders, signIn, type ClientSafeProvider } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 const GoogleButton = () => {
+  const [providers, setProviders] = useState<Record<
+    string,
+    ClientSafeProvider
+  > | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getProviders();
+      setProviders(res);
+    })();
+  }, []);
+
   return (
     <Button
       variant='outline'
       type='button'
       size='lg'
+      disabled={!providers?.google}
       className={cn('flex w-full items-center gap-2')}
+      onClick={() => signIn('google')}
     >
       <Image
         src={google}

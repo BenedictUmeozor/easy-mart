@@ -1,3 +1,5 @@
+import type { Session } from 'next-auth';
+
 export interface AppLink {
   name: string;
   href: string;
@@ -97,4 +99,22 @@ export interface SingleProduct {
   };
   images: string[];
   thumbnail: string;
+}
+
+export interface OrderItem {
+  productName: string;
+  quantity: number;
+  price: number;
+  images: string[];
+}
+
+export interface CartItem {
+  productName: string;
+  quantity: number;
+  price: number;
+  images: string[];
+}
+
+export interface SessionWithUserId extends Session {
+  userId: string;
 }
