@@ -2,7 +2,9 @@ import NextAuth, { getServerSession, type NextAuthOptions } from 'next-auth';
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import { db } from './drizzle';
 import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { accounts, users } from './drizzle/schema';
+import bcrypt from 'bcryptjs';
 import type { SessionWithUserId } from '@/interfaces';
 
 export const authOptions: NextAuthOptions = {
@@ -14,6 +16,28 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {},
+      async authorize(credentials: Record<string, string> | undefined) {
+        if (!credentials) return null;
+
+        const user = await db.query.users.findFirst({
+          where: (users, { eq }) => eq(users.email, credentials.email),
+        });
+
+        if (!user || !user.password) return null;
+
+        const passwordMatch = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!passwordMatch) return null;
+
+        return user;
+      },
     }),
   ],
   session: {
@@ -35,9 +59,9 @@ export const authOptions: NextAuthOptions = {
     signIn: '/login',
     newUser: '/account',
   },
-  // debug: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === 'development',
 };
 
-export const getSession = async () => await getServerSession(authOptions);
+export const getAuthSession = async () => await getServerSession(authOptions);
 
 export default NextAuth(authOptions);

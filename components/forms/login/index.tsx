@@ -9,6 +9,11 @@ import { FormControl } from '@mui/material';
 import { Button } from '@/components/ui/button';
 import GoogleButton from '@/components/shared/google-button';
 import Link from 'next/link';
+import useMessage from '@/hooks/message';
+import { useMutation } from '@tanstack/react-query';
+import { signIn } from 'next-auth/react';
+import { TailwindSpinner } from '@/components/ui/spinner';
+import { useRouter } from 'nextjs-toploader/app';
 
 type FormSchema = z.infer<typeof loginSchema>;
 
@@ -21,8 +26,30 @@ const LoginForm = () => {
     },
   });
 
+  const router = useRouter();
+  const { alertMessage } = useMessage();
+
+  const mutation = useMutation({
+    mutationKey: ['login'],
+    mutationFn: async ({ email, password }: FormSchema) => {
+      const loginAttempt = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: '/account',
+      });
+      if (!loginAttempt?.ok) throw new Error('Incorrect email or password');
+      return true;
+    },
+    onSuccess: () => {
+      alertMessage('Logged in successfully', 'success');
+      router.replace('/account');
+    },
+    onError: error => alertMessage(error.message, 'error'),
+  });
+
   const onSubmit = (values: FormSchema) => {
-    console.log(values);
+    mutation.mutate(values);
   };
 
   return (
@@ -65,10 +92,15 @@ const LoginForm = () => {
           />
         </div>
         <div className='space-y-4'>
-          <Button type='submit' className='w-full' size='lg'>
-            Create Account
+          <Button
+            type='submit'
+            disabled={mutation.isPending}
+            className='w-full'
+            size='lg'
+          >
+            {mutation.isPending ? <TailwindSpinner /> : 'Login'}
           </Button>
-          <GoogleButton />
+          <GoogleButton disabled={mutation.isPending} />
         </div>
         <p className='text-center text-sm'>
           Don&apos;t have an account?{' '}

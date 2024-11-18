@@ -7,6 +7,8 @@ import Footer from '@/components/layout/footer';
 import SessionProvider from '@/components/layout/session';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import NotistackProvider from '@/components/layout/snackbar';
+import QueryProvider from '@/components/layout/query';
 
 const lato = Lato({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -33,11 +35,15 @@ export default async function RootLayout({
           color='#DB4444'
           shadow='0'
         />
-        <SessionProvider session={session}>
-          <Header />
-          {children}
-          <Footer />
-        </SessionProvider>
+        <QueryProvider>
+          <NotistackProvider>
+            <SessionProvider session={session}>
+              <Header />
+              {children}
+              <Footer />
+            </SessionProvider>
+          </NotistackProvider>
+        </QueryProvider>
       </body>
     </html>
   );

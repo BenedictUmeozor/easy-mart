@@ -9,6 +9,12 @@ import { FormControl } from '@mui/material';
 import { Button } from '@/components/ui/button';
 import GoogleButton from '@/components/shared/google-button';
 import Link from 'next/link';
+import useMessage from '@/hooks/message';
+import { useMutation } from '@tanstack/react-query';
+import { createUser } from '@/server/mutations/auth';
+import { signIn } from 'next-auth/react';
+import { TailwindSpinner } from '@/components/ui/spinner';
+import { useRouter } from 'nextjs-toploader/app';
 
 type FormSchema = z.infer<typeof signupSchema>;
 
@@ -22,8 +28,38 @@ const SignupForm = () => {
     },
   });
 
+  const router = useRouter();
+  const { alertMessage } = useMessage();
+
+  const mutation = useMutation({
+    mutationKey: ['signup'],
+    mutationFn: async (values: FormSchema) => {
+      const { success, message } = await createUser(values);
+      if (!success) throw new Error(message);
+      const loginAttempt = await signIn('credentials', {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+        callbackUrl: '/account',
+      });
+      if (!loginAttempt?.ok)
+        throw new Error(loginAttempt?.error || 'Unknown error');
+      return true;
+    },
+    onSuccess: () => {
+      alertMessage('Account created successfully', 'success');
+      router.replace('/account');
+    },
+    onError: error => {
+      alertMessage(
+        error instanceof Error ? error.message : 'Unknown error',
+        'error'
+      );
+    },
+  });
+
   const onSubmit = (values: FormSchema) => {
-    console.log(values);
+    mutation.mutate(values);
   };
 
   return (
@@ -83,10 +119,15 @@ const SignupForm = () => {
           />
         </div>
         <div className='space-y-4'>
-          <Button type='submit' className='w-full' size='lg'>
-            Create Account
+          <Button
+            disabled={mutation.isPending}
+            type='submit'
+            className='w-full'
+            size='lg'
+          >
+            {mutation.isPending ? <TailwindSpinner /> : 'Create Account'}
           </Button>
-          <GoogleButton />
+          <GoogleButton disabled={mutation.isPending} />
         </div>
         <p className='text-center text-sm'>
           Already have an account?{' '}

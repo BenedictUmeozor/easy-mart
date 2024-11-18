@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { getProviders, signIn, type ClientSafeProvider } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
-const GoogleButton = () => {
+const GoogleButton = ({ disabled }: { disabled?: boolean }) => {
   const [providers, setProviders] = useState<Record<
     string,
     ClientSafeProvider
@@ -25,9 +25,9 @@ const GoogleButton = () => {
       variant='outline'
       type='button'
       size='lg'
-      disabled={!providers?.google}
+      disabled={!providers?.google || disabled}
       className={cn('flex w-full items-center gap-2')}
-      onClick={() => signIn('google')}
+      onClick={() => signIn('google', { callbackUrl: '/account' })}
     >
       <Image
         src={google}
