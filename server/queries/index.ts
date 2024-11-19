@@ -1,6 +1,11 @@
 'use server';
 
 import type { AppCategory, ProductResponse, SingleProduct } from '@/interfaces';
+import { revalidatePath } from 'next/cache';
+
+export const revalidateRoutes = async () => {
+  revalidatePath('/', 'layout');
+};
 
 export const fetchCategories = async (): Promise<AppCategory[]> => {
   const res = await fetch('https://dummyjson.com/products/categories', {

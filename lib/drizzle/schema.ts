@@ -32,6 +32,8 @@ export const users = pgTable(
     password: text('password'),
     emailVerified: timestamp('emailVerified', { mode: 'date' }),
     image: text('image'),
+    address: text('address'),
+    phoneNumber: varchar('phoneNumber'),
     ...timestamps,
   },
   table => {

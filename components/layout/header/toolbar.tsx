@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/hover-card';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { logout } from '@/utils';
 import {
   BookmarkIcon,
   HeartIcon,
@@ -15,7 +16,7 @@ import {
   ShoppingBagIcon,
   UserIcon,
 } from 'lucide-react';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -123,7 +124,7 @@ const Account = () => {
                 'flex w-full items-center justify-start gap-1 py-2 text-sm'
               )}
               variant='ghost'
-              onClick={() => signOut()}
+              onClick={logout}
             >
               <LogOutIcon className='h-4 w-4' /> Logout
             </Button>

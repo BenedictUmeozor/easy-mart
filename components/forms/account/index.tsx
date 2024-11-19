@@ -10,30 +10,49 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { TailwindSpinner } from '@/components/ui/spinner';
+import useMessage from '@/hooks/message';
+import type { SelectUser } from '@/lib/drizzle/schema';
 import { cn } from '@/lib/utils';
 import { profileSchema } from '@/lib/zod';
+import { editProfile } from '@/server/mutations/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
 type FormSchema = z.infer<typeof profileSchema>;
 
-const ProfileForm = () => {
+const ProfileForm = ({ user }: { user: SelectUser | undefined }) => {
   const form = useForm<FormSchema>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      address: '',
+      name: user?.name,
+      email: user?.email,
+      address: user?.address || '',
+      phoneNumber: user?.phoneNumber || '',
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
     },
   });
 
+  const { alertMessage } = useMessage();
+
+  const mutation = useMutation({
+    mutationKey: ['update-profile'],
+    mutationFn: async (values: FormSchema) => {
+      const { success, message } = await editProfile(values);
+      if (!success) throw new Error(message);
+    },
+    onSuccess: () => {
+      alertMessage('Profile updated successfully', 'success');
+    },
+    onError: error => alertMessage(error.message, 'error'),
+  });
+
   const onSubmit = (values: FormSchema) => {
-    console.log(values);
+    mutation.mutate(values);
   };
 
   return (
@@ -43,10 +62,10 @@ const ProfileForm = () => {
           <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
             <FormField
               control={form.control}
-              name='firstName'
+              name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>First Name</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl className='w-full'>
                     <Input
                       className={cn(
@@ -63,17 +82,18 @@ const ProfileForm = () => {
             />
             <FormField
               control={form.control}
-              name='lastName'
+              name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Last Name</FormLabel>
+                  <FormLabel>Email Address</FormLabel>
                   <FormControl className='w-full'>
                     <Input
                       className={cn(
                         'border-[#f5f5f5] bg-[#f5f5f5] ring-offset-[#f5f5f5]'
                       )}
-                      type='text'
-                      placeholder='Doe'
+                      type='email'
+                      placeholder='example@gmail.com'
+                      disabled
                       {...field}
                     />
                   </FormControl>
@@ -85,17 +105,17 @@ const ProfileForm = () => {
           <div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
             <FormField
               control={form.control}
-              name='email'
+              name='phoneNumber'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Phone Number</FormLabel>
                   <FormControl className='w-full'>
                     <Input
                       className={cn(
                         'border-[#f5f5f5] bg-[#f5f5f5] ring-offset-[#f5f5f5]'
                       )}
-                      type='email'
-                      placeholder='example@gmail.com'
+                      type='tel'
+                      placeholder='08100000000'
                       {...field}
                     />
                   </FormControl>
@@ -191,12 +211,17 @@ const ProfileForm = () => {
           <Button
             type='reset'
             variant='ghost'
+            disabled={mutation.isPending}
             className='max-lg:flex-1 lg:w-28'
           >
             Cancel
           </Button>
-          <Button className='max-lg:flex-1 lg:w-56' type='submit'>
-            Save Changes
+          <Button
+            type='submit'
+            disabled={mutation.isPending}
+            className='max-lg:flex-1 lg:w-56'
+          >
+            {mutation.isPending ? <TailwindSpinner /> : 'Save Changes'}
           </Button>
         </div>
       </form>

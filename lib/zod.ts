@@ -44,13 +44,13 @@ export const contactSchema = z.object({
 
 export const profileSchema = z
   .object({
-    firstName: z.string().min(1, { message: 'This field is required' }),
-    lastName: z.string().min(1, { message: 'This field is required' }),
+    name: z.string().min(1, { message: 'This field is required' }),
     email: z
       .string()
       .min(1, { message: 'This field is required' })
       .email({ message: 'Invalid email' }),
     address: z.string().min(1, { message: 'This field is required' }),
+    phoneNumber: z.string().min(1, { message: 'This field is required' }),
     currentPassword: z.string().optional(),
     newPassword: z.string().optional(),
     confirmPassword: z.string().optional(),

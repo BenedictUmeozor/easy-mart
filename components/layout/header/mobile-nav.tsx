@@ -3,9 +3,10 @@
 import { Button } from '@/components/ui/button';
 import { NAVLINKS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { logout } from '@/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MenuIcon, X } from 'lucide-react';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, useState } from 'react';
@@ -53,7 +54,7 @@ const MobileNav = () => {
                     className={cn(
                       'flex w-full items-center justify-start text-base hover:text-primary'
                     )}
-                    onClick={() => signOut()}
+                    onClick={logout}
                   >
                     Logout
                   </Button>

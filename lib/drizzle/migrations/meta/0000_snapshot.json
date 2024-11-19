@@ -1,5 +1,5 @@
 {
-  "id": "0967bec1-a36e-4210-b0cc-03177ac041a8",
+  "id": "a31c0cec-34f8-488f-930e-cf8a452a3cc6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -401,6 +401,18 @@
         "image": {
           "name": "image",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phoneNumber": {
+          "name": "phoneNumber",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },

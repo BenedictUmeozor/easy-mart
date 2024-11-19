@@ -55,6 +55,8 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"password" text,
 	"emailVerified" timestamp,
 	"image" text,
+	"address" text,
+	"phoneNumber" varchar,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
